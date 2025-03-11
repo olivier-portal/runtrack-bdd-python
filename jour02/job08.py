@@ -37,23 +37,45 @@ db = mysql.connector.connect(
 cur = db.cursor()
 class Zoo:
     def __init__(self):
-        cage_query = '''
-            SELECT superficie, capacite FROM cage
-        '''
-        cur.execute(cage_query)
-        self.cage = cur.fetchall()
         
-        animal_query = '''
-            SELECT nom, race, id_cage, naissance, origine FROM animal
-        '''
-        cur.execute(animal_query)
-        self.animal = cur.fetchall()
+        self.create_cage()
+        self.create_animal()
+        
+        # Check that cage table exists
+        cage_query = "SELECT superficie, capacite FROM cage"
+        cur.execute("SHOW TABLES LIKE 'cage'")
+        if cur.fetchone():  # Vérifie si la table existe
+            cur.execute(cage_query)
+            self.cage = cur.fetchall()
+        else:
+            self.cage = []
+
+        # Check that table animal exists
+        animal_query = "SELECT nom, race, id_cage, naissance, origine FROM animal"
+        cur.execute("SHOW TABLES LIKE 'animal'")
+        if cur.fetchone():  # Vérifie si la table existe
+            cur.execute(animal_query)
+            self.animal = cur.fetchall()
+        else:
+            self.animal = []
         
     # Create table cage
     def create_cage(self):
-        cur.execute("CREATE TABLE IF NOT EXISTS cage (id INT AUTO_INCREMENT PRIMARY KEY, superficie INT NOT NULL), capacite INT")
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS cage (
+                id INT AUTO_INCREMENT PRIMARY KEY, 
+                superficie INT NOT NULL, 
+                capacite INT NOT NULL
+            )
+        """)
         db.commit()
-        print("Table 'cage' was succefully created !")
+        print("Table 'cage' was successfully created!")
+        
+    # Create table animal
+    def create_animal(self):
+        cur.execute("CREATE TABLE IF NOT EXISTS animal (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, nom VARCHAR(50) NOT NULL, race VARCHAR(50) NOT NULL, id_cage INT NULL, naissance DATE NOT NULL, origine VARCHAR(50) NOT NULL, FOREIGN KEY (id_cage) REFERENCES cage(id) ON DELETE SET NULL)")
+        db.commit()
+        print("Table 'animal' created with success !")
         
 #     # Add services
 #     def insert_cages(self):
@@ -64,12 +86,6 @@ class Zoo:
         
 #         db.commit()
 #         print("Services ajoutés avec succès !")
-        
-#     # Create table employe
-#     def create_employe(self):
-#         cur.execute("CREATE TABLE IF NOT EXISTS employe (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, nom VARCHAR(100) NOT NULL, prenom VARCHAR(100) NOT NULL, salaire FLOAT(8, 2) NOT NULL, id_service INT NOT NULL, FOREIGN KEY (id_service) REFERENCES service(id) ON DELETE CASCADE)")
-#         db.commit()
-#         print("Table 'employe' créée avec succès !")
 
 #     def add_employe(self):
 #         fake = Faker()
@@ -162,14 +178,14 @@ class Zoo:
 #         else:
 #             print("Aucun employé trouvé avec ce nom et prénom.")
 
-# # Create an instance of Employe Class
-# employe_instance = Employe()
+# Create an instance of Employe Class
+employe_instance = Zoo()
 
 # # call methods from the instance
 # '''
-# employe_instance.create_service()
+employe_instance.create_cage()
 # employe_instance.insert_services()
-# employe_instance.create_employe()
+employe_instance.create_animal()
 # employe_instance.add_employe()
 
 # Used only once
@@ -182,5 +198,5 @@ class Zoo:
 # employe_instance.update_income()
 # employe_instance.delete_employe()
 
-# cur.close()
-# db.close()
+cur.close()
+db.close()

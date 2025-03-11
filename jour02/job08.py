@@ -77,15 +77,23 @@ class Zoo:
         db.commit()
         print("Table 'animal' created with success !")
         
-#     # Add services
-#     def insert_cages(self):
-#         services = [("Informatique",), ("RH",), ("Comptabilité",), ("Marketing",), ("Direction",)]
-        
-#         query_service = "INSERT INTO service (nom) VALUES (%s);"
-#         cur.executemany(query_service, services)
-        
-#         db.commit()
-#         print("Services ajoutés avec succès !")
+    # Add cages
+    def set_cages(self):    
+        cur.execute('''
+                INSERT INTO cage (superficie, capacite) VALUES
+                    (100, 5),
+                    (150, 6),
+                    (200, 10),
+                    (300, 12),
+                    (250, 8),
+                    (180, 7),
+                    (220, 9),
+                    (400, 15),
+                    (350, 13),
+                    (275, 11)
+                ''')        
+        db.commit()
+        print("cages successfully created !")
 
 #     def add_employe(self):
 #         fake = Faker()
@@ -184,7 +192,7 @@ employe_instance = Zoo()
 # # call methods from the instance
 # '''
 employe_instance.create_cage()
-# employe_instance.insert_services()
+# employe_instance.set_cages()
 employe_instance.create_animal()
 # employe_instance.add_employe()
 

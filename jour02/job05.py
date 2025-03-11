@@ -27,17 +27,12 @@ db = mysql.connector.connect(
 # Get a cursor
 cur = db.cursor()
 
-# Query to get name and capacity from salle
-query_salle = """
-SELECT nom, capacite FROM salle;
-"""
-cur.execute(query_salle)
+# Query to calculate total superficy from etage
+cur.execute("SELECT SUM(superficie) FROM etage")
 
-results = cur.fetchall()
+result = cur.fetchone()[0]
 
-print("List of name and capacities of rooms in salle: ")
-for row in results:
-    print(f"Name: {row[0]}, capacity: {row[1]}")
+print(f"La superficie de La Plateforme est de {result} m²")
 
 cur.close()
 db.close()

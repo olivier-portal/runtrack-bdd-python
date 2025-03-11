@@ -80,20 +80,34 @@ insert_services()
 create_employe()
 add_employe() => used once'''
 
-def get_employes_services():
-    query = """
-    SELECT employe.nom, employe.prenom, service.nom AS service
-    FROM employe
-    JOIN service ON employe.id_service = service.id
-    """
-    
-    cur.execute(query)
-    results = cur.fetchall()
-    
-    for row in results:
-        print(f"{row[1]} { row[0]} travaille au service {row[2]}")
+class Employe:
+    def __init__(self):
+        cur.execute("SELECT nom, prenom, salaire, id_service FROM employe")
+        self.employes = cur.fetchall()
+        
+    def get_employes_services(self):
+        query = """
+        SELECT employe.nom, employe.prenom, service.nom AS service
+        FROM employe
+        JOIN service ON employe.id_service = service.id
+        """
+        
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        for row in results:
+            print(f"{row[1]} { row[0]} travaille au service {row[2]}")
+            
+    def get_employe_name(self):
+        for employe in self.employes:
+            print(f"{employe[1]} {employe[0]}")
 
-get_employes_services()
+# Create an instance of Employe Class
+employe_instance = Employe()
+
+# call methods from the instance
+employe_instance.get_employe_name()
+employe_instance.get_employes_services()
 
 cur.close()
 db.close()

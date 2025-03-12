@@ -103,13 +103,11 @@ class Store:
 # Create an instance for store's Class
 store_instance = Store()
 
-'''
-used once:
 store_instance.create_category()
 store_instance.create_product()
 store_instance.insert_categories()
 store_instance.insert_products()
-'''
+
 
 cur.close()
 db.close()

@@ -35,12 +35,26 @@ class Store:
         
     # Create tables category and product
     def create_category(self):
-        cur.execute("CREATE TABLE IF NOT EXISTS category (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL)")
+        cur.execute(
+            '''CREATE TABLE IF NOT EXISTS category (
+            id_category INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+            )'''
+            )
         db.commit()
         print("Table 'category' successfully created !")
         
     def create_product(self):
-        cur.execute("CREATE TABLE IF NOT EXISTS product (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, price INT NOT NULL, quantity INT NOT NULL, id_category INT NOT NULL)")
+        cur.execute(
+            '''CREATE TABLE IF NOT EXISTS product (
+            id_product INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description VARCHAR(255) NOT NULL,
+            price INT NOT NULL, quantity INT NOT NULL,
+            id_category INT NOT NULL,
+            FOREIGN KEY (id_category) REFERENCES category(id_category) ON DELETE CASCADE)
+            '''
+            )
         db.commit()
         print("Table 'product' successfully created !")
         

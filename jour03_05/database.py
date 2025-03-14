@@ -31,6 +31,16 @@ class Database:
         """Get all products"""
         self.cur.execute("SELECT * FROM product")
         return self.cur.fetchall()
+    
+    def fetch_products_and_categories(self):
+        """Get products and their category"""
+        query = """
+            SELECT product.id_product, product.name, product.description, product.price, category.name 
+            FROM product
+            LEFT JOIN category ON product.id_category = category.id_category
+        """
+        self.cur.execute(query)
+        return self.cur.fetchall()
 
     def close(self):
         """Close db"""
